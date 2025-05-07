@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ColorfulScaleBox() {
     const animation = useRef(new Animated.Value(0)).current;
 
-    useEffect(() => {
+    const runAnimation = () => {
         Animated.sequence([
             Animated.timing(animation, {
                 toValue: 1,
@@ -22,7 +22,7 @@ export default function ColorfulScaleBox() {
                 useNativeDriver: false,
             }),
         ]).start();
-    }, [animation]);
+    }
 
     const scale = animation.interpolate({
         inputRange: [0, 1, 2],
@@ -36,7 +36,13 @@ export default function ColorfulScaleBox() {
 
     return (
         <View style={styles.container}>
-            <Animated.View style={[styles.box, { transform: [{ scale }], backgroundColor }]} />
+            <View style={styles.content}>
+                <Animated.View style={[styles.box, { transform: [{ scale }], backgroundColor }]} />
+            </View>
+
+            <TouchableOpacity style={styles.button} onPress={runAnimation}>
+                <Text style={styles.buttonText}>Animate!</Text>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -45,12 +51,30 @@ export default function ColorfulScaleBox() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 40,
         alignItems: 'center',
+        backgroundColor: '#fff',
+    },
+    content: {
+        flex: 1,
+        justifyContent: 'center',
     },
     box: {
         width: 100,
         height: 100,
         borderRadius: 12,
+    },
+    button: {
+        backgroundColor: '#ffa500',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 12,
+
+    },
+    buttonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 16,
     },
 });
